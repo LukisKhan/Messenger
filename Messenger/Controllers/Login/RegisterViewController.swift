@@ -176,7 +176,6 @@ class RegisterViewController: UIViewController {
     }
     
     @objc private func registerButtonTapped() {
-        
         emailField.resignFirstResponder()
         passwordField.resignFirstResponder()
         firstNameField.resignFirstResponder()
@@ -196,8 +195,7 @@ class RegisterViewController: UIViewController {
         }
         
         //Firebase login
-        
-        DatabaseManager.shared.userExists(with: email) { [weak self] (exists) in
+        DatabaseManager.shared.userExists(with: email, completion: { [weak self] exists in
             guard let strongSelf = self else { return }
             guard !exists else {
                 strongSelf.alertUserLoginError(message: "There is already a user account with that email address")
@@ -209,14 +207,13 @@ class RegisterViewController: UIViewController {
                     print("Error creating user")
                     return
                 }
-                
                 DatabaseManager.shared.insertUser(with: ChatAppUser(firstName: firstName,
                                                                     lastName: lastName,
                                                                     emailAddress: email))
                 
                 strongSelf.navigationController?.dismiss(animated: true, completion: nil)
             })
-        }
+        })
     }
     
     func alertUserLoginError(message: String = "Please enter all infomation to create a new account.") {
