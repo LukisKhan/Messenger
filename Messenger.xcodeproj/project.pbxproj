@@ -123,11 +123,11 @@
 			isa = PBXGroup;
 			children = (
 				1E056344249528F700929B0D /* ConversationsViewController.swift */,
+				1E05636424952B1B00929B0D /* ProfileViewController.swift */,
 				1E05636624952BCB00929B0D /* Login */,
 				1E05635E24952ADE00929B0D /* PhotoViewerViewController.swift */,
 				1E05636024952AF200929B0D /* VideoPlayerViewController.swift */,
 				1E05636224952B0C00929B0D /* NewConversationViewController.swift */,
-				1E05636424952B1B00929B0D /* ProfileViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
