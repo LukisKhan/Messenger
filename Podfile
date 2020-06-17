@@ -10,10 +10,18 @@ pod 'Firebase/Core'
 pod 'Firebase/Auth'
 pod 'Firebase/Database'
 
-#Facebook Login
+# Facebook Login
 pod 'FBSDKLoginKit'
 
-#Google Sign In
+# Google Sign In
 pod 'GoogleSignIn'
+
+# Message and activity UI
+pod 'MessageKit'
+pod 'JGProgressHUD'
+
+# Database and Image caching
+pod 'SDWebImage'
+pod 'RealmSwift', '10.0.0-beta.2'
 
 end

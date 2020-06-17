@@ -11,16 +11,21 @@ import FirebaseAuth
 
 class ConversationsViewController: UIViewController {
 
+    private let tableView: UITableView = {
+        let table = UITableView()
+        table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        
+        return table
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-//        view.backgroundColor = .red
         
-//        DatabaseManager.shared.test()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-//        let isLoggedIn = UserDefaults.standard.bool(forKey: "logged_in")
         
         validateAuth()
         
