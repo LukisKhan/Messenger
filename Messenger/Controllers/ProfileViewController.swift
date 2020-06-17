@@ -8,7 +8,7 @@
 
 import UIKit
 import FirebaseAuth
-
+import FBSDKLoginKit
 
 class ProfileViewController: UIViewController {
 
@@ -51,18 +51,20 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
                                              style: .destructive,
                                              handler: { [weak self] (_) in
                                                 guard let strongSelf = self else { return }
+                                                
+                                                FBSDKLoginKit.LoginManager().logOut()
                                                 do {
-                try FirebaseAuth.Auth.auth().signOut()
-                
-                let vc = LoginViewController()
-                let nav = UINavigationController(rootViewController: vc)
-                nav.modalPresentationStyle = .fullScreen
-                strongSelf.present(nav, animated: true)
-                
-            }
-            catch {
-                print("Failed to log out \(error)")
-            }
+                                                    try FirebaseAuth.Auth.auth().signOut()
+                                                    
+                                                    let vc = LoginViewController()
+                                                    let nav = UINavigationController(rootViewController: vc)
+                                                    nav.modalPresentationStyle = .fullScreen
+                                                    strongSelf.present(nav, animated: true)
+                                                    
+                                                }
+                                                catch {
+                                                    print("Failed to log out \(error)")
+                                                }
         })))
         
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
