@@ -82,7 +82,7 @@ class ChatViewController: MessagesViewController {
         self.otherUserEmail = email
         super.init(nibName: nil, bundle: nil)
         if let conversationId = conversationId {
-            listenForMessages(id: conversationId)
+            listenForMessages(id: conversationId, shouldScrollBottom: false)
         }
     }
     
@@ -100,17 +100,23 @@ class ChatViewController: MessagesViewController {
         messageInputBar.delegate = self
     }
     
-    private func listenForMessages(id: String) {
+    private func listenForMessages(id: String, shouldScrollBottom: Bool) {
         DatabaseManager.shared.getAllMessagesForConversation(with: id, completion: { [weak self] result in
             switch result {
             case .success(let messages):
+                print("successful in getting messages: \(messages)")
                 guard !messages.isEmpty else {
+                    print("messages are empty")
                     return
                 }
                 self?.messages = messages
                 
                 DispatchQueue.main.async {
                     self?.messagesCollectionView.reloadDataAndKeepOffset()
+                    
+                    if shouldScrollBottom {
+                        self?.messagesCollectionView.scrollToBottom()
+                    }
                 }
             case .failure(let error):
                 print("failed to get messages: \(error)")
@@ -135,22 +141,38 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         }
         
         print("sending text: \(text)")
+        
         // Send message
+        
+        let message = Message(sender: selfSender,
+                              messageId: messageId,
+                              sentDate: Date(),
+                              kind: .text(text))
+        
         if isNewConversation {
             // Create convo in database
-            let message = Message(sender: selfSender,
-                                  messageId: messageId,
-                                  sentDate: Date(),
-                                  kind: .text(text))
+            
             DatabaseManager.shared.createNewConversation(with: otherUserEmail, name: self.title ?? "User", firstMessage: message, completion: { [weak self] success in
                 if success {
                     print("message sent")
+                    self?.isNewConversation = false
                 } else {
                     print("failed to send")
                 }
             })
         } else {
             // Append to existing conversation data
+            
+            guard let conversationId = conversationId, let name = self.title else {
+                    return
+            }
+            DatabaseManager.shared.sendMessage(to: conversationId, otherUserEmail: otherUserEmail, name: name, newMessage: message, completion: { success in
+                if success {
+                    print("message sent")
+                } else {
+                    print("failed to send")
+                }
+            })
         }
     }
     
